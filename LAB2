@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+
+// Finding the Greatest Common Divisor
+int gcd(int a, int b) {
+    int temporary;
+    while (true) {
+        temporary = a % b;
+        if (temporary == 0)
+            return b;
+        a = b;
+        b = temporary;
+    }
+}
+
+// Checking if a number is prime
+bool isPrime(int number) {
+    if (number <= 1) {
+        return false;
+    }
+    for (int i = 2; i * i <= number; i++) {
+        if (number % i == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    srand(static_cast<unsigned int>(time(0)));
+    int range;
+
+    // Asking for the range
+    std::cout << "Please enter the number till which you want prime numbers: ";
+    std::cin >> range;
+
+    std::vector<int> primeNumbers;
+
+    // Finding all prime numbers up to the given range
+    for (int i = 2; i < range; i++) {
+        if (isPrime(i)) {
+            primeNumbers.push_back(i);
+        }
+    }
+
+    // Selecting two random primes from the list
+    double p = primeNumbers[rand() % primeNumbers.size()];
+    double q = primeNumbers[rand() % primeNumbers.size()];
+    double n = p * q;
+    double totient = (p - 1) * (q - 1);
+
+    // Finding e such that 1 < e < totient and gcd(e, totient) = 1
+    double e = 2;
+    while (e < totient) {
+        if (gcd(static_cast<int>(e), static_cast<int>(totient)) == 1) {
+            break;
+        } else {
+            e++;
+        }
+    }
+
+    // Finding d such that (d * e) % totient = 1
+    double d = 0;
+    for (int k = 1; k < 20; k++) {
+        double x = (1 + (k * totient)) / e;
+        if (std::round(x) == x) {
+            d = x;
+            break;
+        }
+    }
+
+    // Output the results
+    std::cout << "\np = " << p << std::endl;
+    std::cout << "q = " << q << std::endl;
+    std::cout << "n = pq = " << n << std::endl;
+    std::cout << "totient = " << totient << std::endl;
+    std::cout << "e = " << e << std::endl;
+    std::cout << "d = " << d << std::endl;
+
+    return 0;
+}
